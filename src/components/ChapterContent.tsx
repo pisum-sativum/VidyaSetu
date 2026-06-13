@@ -6,12 +6,15 @@ import {
   FileText,
   List,
   NotebookText,
+  Printer,
   TriangleAlert,
 } from 'lucide-react';
-import MarkdownRenderer from '@/components/MarkdownRenderer';
+import MarkdownViewer from '@/components/MarkdownViewer';
+import BookmarkButton from '@/components/BookmarkButton';
 import Link from 'next/link';
 
 export type ChapterContentData = {
+  id?: string;
   title: string;
   order: number;
   content?: string | null;
@@ -134,9 +137,16 @@ export default function ChapterContent({
                 </span>
               )}
             </div>
-            <h1 className="mt-3 text-3xl font-extrabold leading-tight text-primary md:text-5xl">
-              {chapter.title}
-            </h1>
+
+            <div className="mt-3 flex items-start justify-between gap-4">
+              <h1 className="text-3xl font-extrabold leading-tight text-primary md:text-5xl">
+                {chapter.title}
+              </h1>
+              {chapter.id && (
+                <BookmarkButton chapterId={chapter.id} className="mt-1" />
+              )}
+            </div>
+
             <div className="mt-5 flex flex-wrap gap-3">
               {chapter.contentSource && (
                 <span className="inline-flex items-center gap-2 bg-white px-3 py-2 text-sm font-medium text-primary/70">
@@ -155,11 +165,18 @@ export default function ChapterContent({
                   NCERT PDF
                 </a>
               )}
+              <button
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-2 border border-primary bg-white px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/5"
+              >
+                <Printer className="h-4 w-4" />
+                Print
+              </button>
             </div>
           </header>
 
           {hasMarkdown ? (
-            <MarkdownRenderer content={chapter.content ?? ''} />
+            <MarkdownViewer content={chapter.content ?? ''} />
           ) : chapter.pdf ? (
             <div className="border border-primary/15 bg-white p-6">
               <NotebookText className="mb-4 h-6 w-6 text-primary/60" />
